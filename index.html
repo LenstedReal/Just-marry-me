@@ -28,7 +28,7 @@
 
 body {
     margin: 0;
-    padding: 0;
+    padding: 20px;
     background: radial-gradient(circle at center, var(--bg-gradient) 0%, var(--bg-dark) 100%);
     display: flex;
     justify-content: center;
@@ -36,6 +36,7 @@ body {
     min-height: 100vh;
     font-family: 'Poppins', sans-serif;
     overflow-x: hidden;
+    overflow-y: auto;
     position: relative;
 }
 
@@ -85,7 +86,7 @@ body {
     color: #fff;
     text-shadow: var(--shadow-glow);
     z-index: 100;
-    transition: opacity 0.5s ease, transform 0.5s ease;
+    transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .header-text h1 {
@@ -102,8 +103,9 @@ body {
 }
 
 .header-text.fade-out {
-    opacity: 0.2;
-    transform: translate3d(0, -20px, 0);
+    opacity: 0;
+    transform: translate3d(0, -30px, 0);
+    pointer-events: none;
 }
 
 /* ENVELOPE CONTAINER */
@@ -113,11 +115,19 @@ body {
     height: 280px;
     perspective: 1200px;
     z-index: 50;
-    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .envelope-container:hover {
     transform: scale(1.02);
+}
+
+/* Zarf açıldığında mektubun ekrandan taşmasını engellemek için container'ı aşağı kaydırıyoruz */
+.envelope-container.open {
+    transform: translate3d(0, 80px, 0);
+}
+.envelope-container.open:hover {
+    transform: translate3d(0, 80px, 0) scale(1.02);
 }
 
 .envelope-wrapper {
@@ -187,12 +197,8 @@ body {
 }
 
 @keyframes pulse-heart {
-    0%, 100% {
-        transform: translate3d(-50%, 0, 0) scale(1);
-    }
-    50% {
-        transform: translate3d(-50%, 0, 0) scale(1.1);
-    }
+    0%, 100% { transform: translate3d(-50%, 0, 0) scale(1); }
+    50% { transform: translate3d(-50%, 0, 0) scale(1.1); }
 }
 
 .heart-seal:hover {
@@ -272,7 +278,7 @@ body {
 .envelope-container.open .letter {
     transform: translate3d(-50%, -200px, 0);
     z-index: 25;
-    height: 400px;
+    height: 420px;
     box-shadow: 0 20px 50px rgba(0,0,0,0.4);
 }
 
@@ -287,8 +293,10 @@ body {
     margin-top: 25px;
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 20px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap; /* Düzen bozulmaması için sarmayı engelledik */
+    width: 100%;
 }
 
 .btn {
@@ -298,7 +306,11 @@ body {
     cursor: pointer;
     font-weight: 600;
     font-size: 1.1rem;
-    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                width 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
+                padding 0.4s ease, 
+                margin 0.4s ease, 
+                opacity 0.3s ease;
     font-family: 'Poppins', sans-serif;
     letter-spacing: 0.5px;
     position: relative;
@@ -329,7 +341,7 @@ body {
     transform: scale(1);
     box-shadow: var(--shadow-glow);
     position: relative;
-    z-index: 5;
+    z-index: 10;
 }
 
 .btn-yes:hover {
@@ -346,7 +358,8 @@ body {
     color: #ddd;
     box-shadow: 0 5px 20px rgba(0,0,0,0.4);
     position: relative;
-    z-index: 2;
+    z-index: 5;
+    white-space: nowrap;
 }
 
 .btn-no:hover {
@@ -394,12 +407,8 @@ body {
 }
 
 @keyframes float-text {
-    0%, 100% {
-        transform: translate3d(0, 0, 0);
-    }
-    50% {
-        transform: translate3d(0, -15px, 0);
-    }
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(0, -15px, 0); }
 }
 
 #heartCanvas {
@@ -425,25 +434,34 @@ body {
     text-underline-offset: 4px;
 }
 
-/* RESPONSIVE */
+/* RESPONSIVE RESPONSIVENESS FIXES */
 @media (max-width: 768px) {
-    .header-text h1 {
-        font-size: 1.8rem;
-    }
-    
-    .header-text p {
-        font-size: 0.95rem;
-    }
+    .header-text h1 { font-size: 1.8rem; }
+    .header-text p { font-size: 0.95rem; }
     
     .envelope-container {
         width: 340px;
         height: 230px;
     }
     
+    .envelope-container.open {
+        transform: translate3d(0, 60px, 0);
+    }
+    .envelope-container.open:hover {
+        transform: translate3d(0, 60px, 0) scale(1.02);
+    }
+    
     .lid {
         border-left: 170px solid transparent;
         border-right: 170px solid transparent;
         border-top: 115px solid var(--envelope-color);
+    }
+    
+    .lid::after {
+        top: -115px;
+        left: -170px;
+        width: 340px;
+        height: 115px;
     }
     
     .envelope-front {
@@ -462,33 +480,17 @@ body {
         padding: 20px 18px;
     }
     
-    .letter-name {
-        font-size: 1.6rem;
-    }
-    
-    .letter p {
-        font-size: 0.9rem;
-    }
+    .letter-name { font-size: 1.6rem; }
+    .letter p { font-size: 0.9rem; }
     
     .envelope-container.open .letter {
-        transform: translate3d(-50%, -180px, 0);
-        height: 380px;
+        transform: translate3d(-50%, -150px, 0);
+        height: 360px;
     }
     
-    .final-msg {
-        font-size: 3.5rem;
-    }
-    
-    .btn {
-        padding: 12px 28px;
-        font-size: 1rem;
-    }
-    
-    .sponsor-brand {
-        font-size: 1rem;
-        bottom: 15px;
-        right: 15px;
-    }
+    .final-msg { font-size: 3.5rem; }
+    .btn { padding: 12px 25px; font-size: 1rem; }
+    .sponsor-brand { font-size: 1rem; bottom: 15px; right: 15px; }
 }
 
 @media (max-width: 480px) {
@@ -497,10 +499,21 @@ body {
         height: 200px;
     }
     
+    .envelope-container.open {
+        transform: translate3d(0, 50px, 0);
+    }
+    
     .lid {
         border-left: 150px solid transparent;
         border-right: 150px solid transparent;
         border-top: 100px solid var(--envelope-color);
+    }
+    
+    .lid::after {
+        top: -100px;
+        left: -150px;
+        width: 300px;
+        height: 100px;
     }
     
     .envelope-front {
@@ -515,21 +528,17 @@ body {
         font-size: 35px;
     }
     
-    .letter-name {
-        font-size: 1.4rem;
-    }
-    
-    .letter p {
-        font-size: 0.85rem;
-    }
+    .letter-name { font-size: 1.4rem; }
+    .letter p { font-size: 0.85rem; }
     
     .envelope-container.open .letter {
-        height: 360px;
+        transform: translate3d(-50%, -130px, 0);
+        height: 330px;
     }
     
-    .final-msg {
-        font-size: 2.8rem;
-    }
+    .final-msg { font-size: 2.8rem; }
+    .btn-group { gap: 12px; }
+    .btn { padding: 10px 20px; font-size: 0.9rem; }
 }
 
 /* SHAKE ANIMATION */
@@ -602,6 +611,7 @@ body.shake {
 // ==================== GLOBAL VARIABLES ====================
 let envelopeOpened = false;
 let audioContext = null;
+let noActionCount = 0; // Tıklama / Kaçırma sayacı
 
 // ==================== AUDIO ENGINE ====================
 function initAudio() {
@@ -614,7 +624,6 @@ function playEnvelopeSound() {
     initAudio();
     if (!audioContext) return;
     
-    // Zarf açılma efekti - yumuşak frekans yükselmesi
     const osc = audioContext.createOscillator();
     const gain = audioContext.createGain();
     osc.connect(gain);
@@ -672,22 +681,32 @@ function openEnvelope() {
     document.getElementById('headerTxt').classList.add('fade-out');
 }
 
-// ==================== BUTTON EVASION (FIXED LOGIC) ====================
+// ==================== DYNAMIC BUTTON EVASION ENGINE ====================
 function runAway(event) {
     if (event) event.preventDefault();
 
+    noActionCount++;
     const btnNo = document.getElementById('runBtn');
     const btnYes = document.querySelector('.btn-yes');
 
-    // HAYIR butonunu tamamen kapat
-    btnNo.style.opacity = '0';
-    btnNo.style.pointerEvents = 'none';
-    btnNo.style.transition = 'opacity 0.25s cubic-bezier(0.25, 1, 0.5, 1)';
-
-    // EVET butonunu devasa boyuta getir
-    btnYes.style.transform = 'scale(1.6)';
-    btnYes.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-    btnYes.style.zIndex = '10';
+    if (noActionCount === 1) {
+        // İlk etkileşim: Evet %15 büyür
+        btnYes.style.transform = 'scale(1.15)';
+    } else if (noActionCount === 2) {
+        // İkinci etkileşim: Evet %30 büyür
+        btnYes.style.transform = 'scale(1.3)';
+    } else if (noActionCount >= 3) {
+        // Üçüncü etkileşim: Hayır imha edilir, Evet tüm satırı kaplar
+        btnNo.style.opacity = '0';
+        btnNo.style.pointerEvents = 'none';
+        btnNo.style.width = '0';
+        btnNo.style.padding = '0';
+        btnNo.style.margin = '0';
+        
+        // Çok abartmadan alanı bloke edecek maksimum büyüme oranı (%38-40 eşeyi)
+        btnYes.style.transform = 'scale(1.38)';
+        btnYes.style.width = '100%';
+    }
 }
 
 // ==================== ACCEPT ACTIONS ====================
@@ -709,7 +728,6 @@ function startHeartAnimation() {
 
     const size = Math.min(window.innerWidth * 0.8, 500);
     
-    // Retina/HD Ekran Kalibrasyon Çarpanı
     const dpr = window.devicePixelRatio || 1;
     canvas.width = size * dpr;
     canvas.height = size * dpr;
@@ -725,15 +743,14 @@ function startHeartAnimation() {
     ctx.shadowBlur = 15;
 
     let t = 0;
-    const scale = size / 38; // Orantı kalibrasyonu
+    const scale = size / 38;
     const cx = size / 2;
-    const cy = size / 2 - 20; // Yukarı doğru hafif ofset
+    const cy = size / 2 - 20;
     
     ctx.beginPath();
 
     function draw() {
         if (t > Math.PI * 2) return;
-        // Matematiksel Parametrik Kalp Formülü
         const x = 16 * Math.pow(Math.sin(t), 3);
         const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
         const dx = x * scale + cx;
@@ -743,7 +760,7 @@ function startHeartAnimation() {
         else ctx.lineTo(dx, dy);
 
         ctx.stroke();
-        t += 0.03; // Yumuşak çizim hızı
+        t += 0.03;
         requestAnimationFrame(draw);
     }
     draw();
@@ -758,31 +775,4 @@ function createFloatingHearts() {
     for (let i = 0; i < maxHearts; i++) {
         const heart = document.createElement('div');
         heart.className = 'heart-particle';
-        heart.innerText = heartTypes[Math.floor(Math.random() * heartTypes.length)];
-        heart.style.left = Math.random() * 100 + 'vw';
-        heart.style.animationDelay = Math.random() * 6 + 's';
-        heart.style.fontSize = (Math.random() * 15 + 15) + 'px';
-        container.appendChild(heart);
-    }
-}
-
-// ==================== INITIALIZATION CYCLE ====================
-window.addEventListener('load', () => {
-    createFloatingHearts();
-    
-    // Ses motoru tetikleyicisi
-    document.body.addEventListener('click', initAudio, { once: true });
-    document.body.addEventListener('touchstart', initAudio, { once: true });
-
-    // HAYIR butonunun olay dinleyicileri (Doğru yere taşındı)
-    const runBtn = document.getElementById('runBtn');
-    if (window.matchMedia('(hover: hover)').matches) {
-        runBtn.addEventListener('mouseover', runAway);
-    } else {
-        runBtn.addEventListener('click', runAway);
-    }
-});
-</script>
-
-</body>
-</html>
+ 
