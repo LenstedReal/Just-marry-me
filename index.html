@@ -86,7 +86,7 @@ body {
     color: #fff;
     text-shadow: var(--shadow-glow);
     z-index: 100;
-    transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
 .header-text h1 {
@@ -104,7 +104,7 @@ body {
 
 .header-text.fade-out {
     opacity: 0;
-    transform: translate3d(0, -30px, 0);
+    transform: translate3d(0, -20px, 0);
     pointer-events: none;
 }
 
@@ -122,7 +122,7 @@ body {
     transform: scale(1.02);
 }
 
-/* Zarf açıldığında mektubun ekrandan taşmasını engellemek için container'ı aşağı kaydırıyoruz */
+/* Masaüstü kırılımı için kritik kaydırma kuralı geri eklendi */
 .envelope-container.open {
     transform: translate3d(0, 80px, 0);
 }
@@ -197,17 +197,13 @@ body {
 }
 
 @keyframes pulse-heart {
-    0%, 100% { transform: translate3d(-50%, 0, 0) scale(1); }
+    0%, 100’% { transform: translate3d(-50%, 0, 0) scale(1); }
     50% { transform: translate3d(-50%, 0, 0) scale(1.1); }
 }
 
 .heart-seal:hover {
     transform: translate3d(-50%, 0, 0) scale(1.2);
     filter: drop-shadow(0 0 20px rgba(255, 0, 68, 0.9));
-}
-
-.heart-seal:active {
-    transform: translate3d(-50%, 0, 0) scale(0.95);
 }
 
 /* LETTER */
@@ -295,7 +291,7 @@ body {
     justify-content: center;
     align-items: center;
     gap: 20px;
-    flex-wrap: nowrap; /* Düzen bozulmaması için sarmayı engelledik */
+    flex-wrap: nowrap;
     width: 100%;
 }
 
@@ -396,14 +392,8 @@ body {
 }
 
 @keyframes pulse-text {
-    0%, 100% {
-        transform: scale(1);
-        filter: brightness(1);
-    }
-    50% {
-        transform: scale(1.08);
-        filter: brightness(1.2);
-    }
+    0%, 100% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.08); filter: brightness(1.2); }
 }
 
 @keyframes float-text {
@@ -434,34 +424,19 @@ body {
     text-underline-offset: 4px;
 }
 
-/* RESPONSIVE RESPONSIVENESS FIXES */
+/* RESPONSIVE */
 @media (max-width: 768px) {
     .header-text h1 { font-size: 1.8rem; }
     .header-text p { font-size: 0.95rem; }
     
-    .envelope-container {
-        width: 340px;
-        height: 230px;
-    }
-    
-    .envelope-container.open {
-        transform: translate3d(0, 60px, 0);
-    }
-    .envelope-container.open:hover {
-        transform: translate3d(0, 60px, 0) scale(1.02);
-    }
+    .envelope-container { width: 340px; height: 230px; }
+    .envelope-container.open { transform: translate3d(0, 60px, 0); }
+    .envelope-container.open:hover { transform: translate3d(0, 60px, 0) scale(1.02); }
     
     .lid {
         border-left: 170px solid transparent;
         border-right: 170px solid transparent;
         border-top: 115px solid var(--envelope-color);
-    }
-    
-    .lid::after {
-        top: -115px;
-        left: -170px;
-        width: 340px;
-        height: 115px;
     }
     
     .envelope-front {
@@ -471,49 +446,28 @@ body {
         border-top: 115px solid transparent;
     }
     
-    .heart-seal {
-        top: 95px;
-        font-size: 40px;
-    }
-    
-    .letter {
-        padding: 20px 18px;
-    }
-    
+    .heart-seal { top: 95px; font-size: 40px; }
+    .letter { padding: 20px 18px; }
     .letter-name { font-size: 1.6rem; }
     .letter p { font-size: 0.9rem; }
     
     .envelope-container.open .letter {
-        transform: translate3d(-50%, -150px, 0);
-        height: 360px;
+        transform: translate3d(-50%, -160px, 0);
+        height: 380px;
     }
     
     .final-msg { font-size: 3.5rem; }
     .btn { padding: 12px 25px; font-size: 1rem; }
-    .sponsor-brand { font-size: 1rem; bottom: 15px; right: 15px; }
 }
 
 @media (max-width: 480px) {
-    .envelope-container {
-        width: 300px;
-        height: 200px;
-    }
-    
-    .envelope-container.open {
-        transform: translate3d(0, 50px, 0);
-    }
+    .envelope-container { width: 300px; height: 200px; }
+    .envelope-container.open { transform: translate3d(0, 50px, 0); }
     
     .lid {
         border-left: 150px solid transparent;
         border-right: 150px solid transparent;
         border-top: 100px solid var(--envelope-color);
-    }
-    
-    .lid::after {
-        top: -100px;
-        left: -150px;
-        width: 300px;
-        height: 100px;
     }
     
     .envelope-front {
@@ -523,22 +477,15 @@ body {
         border-top: 100px solid transparent;
     }
     
-    .heart-seal {
-        top: 82px;
-        font-size: 35px;
-    }
-    
+    .heart-seal { top: 82px; font-size: 35px; }
     .letter-name { font-size: 1.4rem; }
     .letter p { font-size: 0.85rem; }
     
     .envelope-container.open .letter {
-        transform: translate3d(-50%, -130px, 0);
-        height: 330px;
+        transform: translate3d(-50%, -140px, 0);
+        height: 350px;
     }
-    
     .final-msg { font-size: 2.8rem; }
-    .btn-group { gap: 12px; }
-    .btn { padding: 10px 20px; font-size: 0.9rem; }
 }
 
 /* SHAKE ANIMATION */
@@ -582,15 +529,9 @@ body.shake {
                 Bunu sana söylemek için doğru zamanı bekledim. Çünkü seninle her konuştuğumda içimde bir şeyler değişti. 
                 Seni tanıdıkça kelimeler daha anlamlı, günler daha güzel olmaya başladı.
             </p>
-            <p>
-                Artık seninle sadece konuşmak değil, daha fazlasını yaşamak istiyorum.
-            </p>
-            <p>
-                Eğer sen de istersen... benimle bir adım daha ileri gider misin?
-            </p>
-            <p>
-                <strong>Benimle çıkar mısın?</strong>
-            </p>
+            <p>Artık seninle sadece konuşmak değil, daha fazlasını yaşamak istiyorum.</p>
+            <p>Eğer sen de istersen... benimle bir adım daha ileri gider misin?</p>
+            <p><strong>Benimle çıkar mısın?</strong></p>
             <div class="btn-group">
                 <button class="btn btn-yes" onclick="acceptProposal()">EVET ❤️</button>
                 <button class="btn btn-no" id="runBtn">HAYIR</button>
@@ -611,12 +552,15 @@ body.shake {
 // ==================== GLOBAL VARIABLES ====================
 let envelopeOpened = false;
 let audioContext = null;
-let noActionCount = 0; // Tıklama / Kaçırma sayacı
+let noActionCount = 0; // Aşamalı kaçış motoru sayacı aktif
 
 // ==================== AUDIO ENGINE ====================
 function initAudio() {
     if (!audioContext) {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioContext && audioContext.state === 'suspended') {
+        audioContext.resume();
     }
 }
 
@@ -674,6 +618,7 @@ function playAcceptanceSound() {
 // ==================== ENVELOPE CONTROLLER ====================
 function openEnvelope() {
     if (envelopeOpened) return;
+    initAudio();
     envelopeOpened = true;
     playEnvelopeSound();
 
@@ -681,7 +626,7 @@ function openEnvelope() {
     document.getElementById('headerTxt').classList.add('fade-out');
 }
 
-// ==================== DYNAMIC BUTTON EVASION ENGINE ====================
+// ==================== BUTTON EVASION ENGINE (OPTIMIZED) ====================
 function runAway(event) {
     if (event) event.preventDefault();
 
@@ -690,22 +635,25 @@ function runAway(event) {
     const btnYes = document.querySelector('.btn-yes');
 
     if (noActionCount === 1) {
-        // İlk etkileşim: Evet %15 büyür
-        btnYes.style.transform = 'scale(1.15)';
+        // Aşama 1: Evet hafif büyür
+        btnYes.style.transform = 'scale(1.18)';
+        btnYes.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
     } else if (noActionCount === 2) {
-        // İkinci etkileşim: Evet %30 büyür
-        btnYes.style.transform = 'scale(1.3)';
+        // Aşama 2: Evet baskın boyuta geçer
+        btnYes.style.transform = 'scale(1.35)';
     } else if (noActionCount >= 3) {
-        // Üçüncü etkileşim: Hayır imha edilir, Evet tüm satırı kaplar
+        // Aşama 3: Hayır tamamen imha edilir, alan çökmesi engellenir
         btnNo.style.opacity = '0';
         btnNo.style.pointerEvents = 'none';
         btnNo.style.width = '0';
         btnNo.style.padding = '0';
         btnNo.style.margin = '0';
+        btnNo.style.transition = 'all 0.3s ease';
         
-        // Çok abartmadan alanı bloke edecek maksimum büyüme oranı (%38-40 eşeyi)
-        btnYes.style.transform = 'scale(1.38)';
+        // Evet tüm satırı kilitler
+        btnYes.style.transform = 'scale(1.5)';
         btnYes.style.width = '100%';
+        btnYes.style.zIndex = '10';
     }
 }
 
@@ -725,7 +673,6 @@ function acceptProposal() {
 function startHeartAnimation() {
     const canvas = document.getElementById('heartCanvas');
     const ctx = canvas.getContext('2d');
-
     const size = Math.min(window.innerWidth * 0.8, 500);
     
     const dpr = window.devicePixelRatio || 1;
@@ -735,7 +682,6 @@ function startHeartAnimation() {
     canvas.style.height = size + 'px';
     
     ctx.scale(dpr, dpr);
-
     ctx.clearRect(0, 0, size, size);
     ctx.strokeStyle = '#ff4d8d';
     ctx.lineWidth = 4;
@@ -766,13 +712,28 @@ function startHeartAnimation() {
     draw();
 }
 
-// ==================== AMBIENT PARTICLES ====================
+// ==================== AMBIENT PARTICLES (ORGANIC) ====================
 function createFloatingHearts() {
     const container = document.getElementById('floatingHearts');
+    if (!container) return;
     const heartTypes = ['❤️', '💖', '🌸', '✨'];
     const maxHearts = 25;
 
     for (let i = 0; i < maxHearts; i++) {
         const heart = document.createElement('div');
         heart.className = 'heart-particle';
+        heart.innerText = heartTypes[Math.floor(Math.random() * heartTypes.length)];
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDelay = Math.random() * 6 + 's';
+        // Kalplerin tek düze yükselmesini engellemek için hız asenkronizasyonu
+        heart.style.animationDuration = (Math.random() * 4 + 6) + 's';
+        heart.style.fontSize = (Math.random() * 15 + 15) + 'px';
+        container.appendChild(heart);
+    }
+}
+
+// ==================== INITIALIZATION CYCLE ====================
+window.addEventListener('load', () => {
+    createFloatingHearts();
+    
  
