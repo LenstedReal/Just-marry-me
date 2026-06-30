@@ -49,18 +49,20 @@ body {
     pointer-events: none;
     z-index: 1;
     overflow: hidden;
+    will-change: transform;
 }
 
 .heart-particle {
     position: absolute;
     font-size: 20px;
     opacity: 0.3;
-    animation: float-up 8s infinite;
+    animation: float-up 8s infinite linear;
+    will-change: transform;
 }
 
 @keyframes float-up {
     0% {
-        transform: translateY(100vh) rotate(0deg);
+        transform: translate3d(0, 100vh, 0) rotate(0deg);
         opacity: 0;
     }
     10% {
@@ -70,11 +72,12 @@ body {
         opacity: 0.3;
     }
     100% {
-        transform: translateY(-100px) rotate(360deg);
+        transform: translate3d(0, -100px, 0) rotate(360deg);
         opacity: 0;
     }
 }
-    /* HEADER */
+
+/* HEADER */
 .header-text {
     position: absolute;
     top: 8%;
@@ -100,7 +103,7 @@ body {
 
 .header-text.fade-out {
     opacity: 0.2;
-    transform: translateY(-20px);
+    transform: translate3d(0, -20px, 0);
 }
 
 /* ENVELOPE CONTAINER */
@@ -110,7 +113,7 @@ body {
     height: 280px;
     perspective: 1200px;
     z-index: 50;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .envelope-container:hover {
@@ -125,7 +128,8 @@ body {
     box-shadow: 0 15px 60px rgba(0,0,0,0.6);
     border-radius: 8px;
 }
-    /* ENVELOPE LID */
+
+/* ENVELOPE LID */
 .lid {
     position: absolute;
     top: 0;
@@ -140,6 +144,7 @@ body {
     z-index: 30;
     backface-visibility: hidden;
     filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+    will-change: transform;
 }
 
 .lid::after {
@@ -172,38 +177,39 @@ body {
     position: absolute;
     top: 115px;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate3d(-50%, 0, 0);
     font-size: 50px;
     cursor: pointer;
     z-index: 40;
-    transition: all 0.4s ease;
-    animation: pulse-heart 2s infinite;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: pulse-heart 2s infinite ease-in-out;
     filter: drop-shadow(0 0 10px rgba(255, 0, 68, 0.6));
 }
 
 @keyframes pulse-heart {
     0%, 100% {
-        transform: translateX(-50%) scale(1);
+        transform: translate3d(-50%, 0, 0) scale(1);
     }
     50% {
-        transform: translateX(-50%) scale(1.1);
+        transform: translate3d(-50%, 0, 0) scale(1.1);
     }
 }
 
 .heart-seal:hover {
-    transform: translateX(-50%) scale(1.2);
+    transform: translate3d(-50%, 0, 0) scale(1.2);
     filter: drop-shadow(0 0 20px rgba(255, 0, 68, 0.9));
 }
 
 .heart-seal:active {
-    transform: translateX(-50%) scale(0.95);
+    transform: translate3d(-50%, 0, 0) scale(0.95);
 }
-    /* LETTER */
+
+/* LETTER */
 .letter {
     position: absolute;
     bottom: 15px;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate3d(-50%, 0, 0);
     width: 90%;
     height: 82%;
     background: linear-gradient(135deg, #fff 0%, #fff5f8 100%);
@@ -264,7 +270,7 @@ body {
 }
 
 .envelope-container.open .letter {
-    transform: translateX(-50%) translateY(-200px);
+    transform: translate3d(-50%, -200px, 0);
     z-index: 25;
     height: 400px;
     box-shadow: 0 20px 50px rgba(0,0,0,0.4);
@@ -273,9 +279,10 @@ body {
 .envelope-container.open .heart-seal {
     opacity: 0;
     pointer-events: none;
-    transform: translateX(-50%) scale(0);
+    transform: translate3d(-50%, 0, 0) scale(0);
 }
-    /* BUTTONS */
+
+/* BUTTONS */
 .btn-group {
     margin-top: 25px;
     display: flex;
@@ -291,7 +298,7 @@ body {
     cursor: pointer;
     font-weight: 600;
     font-size: 1.1rem;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
     font-family: 'Poppins', sans-serif;
     letter-spacing: 0.5px;
     position: relative;
@@ -316,29 +323,29 @@ body {
     height: 300px;
 }
 
-    .btn-yes {
+.btn-yes {
     background: linear-gradient(135deg, var(--neon-pink) 0%, var(--soft-pink) 100%);
     color: white;
     transform: scale(1);
     box-shadow: var(--shadow-glow);
     position: relative;
-    z-index: 5; /* 1 → 5 */
+    z-index: 5;
 }
 
 .btn-yes:hover {
-    transform: translateY(-3px);
+    transform: scale(1.05) translateY(-3px);
     box-shadow: 0 0 35px rgba(255, 77, 141, 0.6);
 }
 
 .btn-yes:active {
-    transform: translateY(-1px);
+    transform: scale(1) translateY(-1px);
 }
 
 .btn-no {
     background: linear-gradient(135deg, #555 0%, #333 100%);
     color: #ddd;
     box-shadow: 0 5px 20px rgba(0,0,0,0.4);
-    position: relative; /* ÖNEMLİ */
+    position: relative;
     z-index: 2;
 }
 
@@ -359,7 +366,8 @@ body {
     opacity: 0;
     transition: opacity 0.8s ease;
 }
-        #final-overlay.show {
+
+#final-overlay.show {
     display: flex;
     opacity: 1;
 }
@@ -387,10 +395,10 @@ body {
 
 @keyframes float-text {
     0%, 100% {
-        transform: translateY(0px);
+        transform: translate3d(0, 0, 0);
     }
     50% {
-        transform: translateY(-15px);
+        transform: translate3d(0, -15px, 0);
     }
 }
 
@@ -431,7 +439,8 @@ body {
         width: 340px;
         height: 230px;
     }
-    lid {
+    
+    .lid {
         border-left: 170px solid transparent;
         border-right: 170px solid transparent;
         border-top: 115px solid var(--envelope-color);
@@ -462,7 +471,7 @@ body {
     }
     
     .envelope-container.open .letter {
-        transform: translateX(-50%) translateY(-180px);
+        transform: translate3d(-50%, -180px, 0);
         height: 380px;
     }
     
@@ -505,6 +514,7 @@ body {
         top: 82px;
         font-size: 35px;
     }
+    
     .letter-name {
         font-size: 1.4rem;
     }
@@ -524,16 +534,16 @@ body {
 
 /* SHAKE ANIMATION */
 @keyframes shake {
-    0%, 100% { transform: translate(0, 0) rotate(0deg); }
-    10% { transform: translate(-8px, -8px) rotate(-2deg); }
-    20% { transform: translate(8px, 8px) rotate(2deg); }
-    30% { transform: translate(-8px, 8px) rotate(-2deg); }
-    40% { transform: translate(8px, -8px) rotate(2deg); }
-    50% { transform: translate(-8px, -8px) rotate(-2deg); }
-    60% { transform: translate(8px, 8px) rotate(2deg); }
-    70% { transform: translate(-8px, 8px) rotate(-2deg); }
-    80% { transform: translate(8px, -8px) rotate(2deg); }
-    90% { transform: translate(-8px, -8px) rotate(-2deg); }
+    0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+    10% { transform: translate3d(-8px, -8px, 0) rotate(-2deg); }
+    20% { transform: translate3d(8px, 8px, 0) rotate(2deg); }
+    30% { transform: translate3d(-8px, 8px, 0) rotate(-2deg); }
+    40% { transform: translate3d(8px, -8px, 0) rotate(2deg); }
+    50% { transform: translate3d(-8px, -8px, 0) rotate(-2deg); }
+    60% { transform: translate3d(8px, 8px, 0) rotate(2deg); }
+    70% { transform: translate3d(-8px, 8px, 0) rotate(-2deg); }
+    80% { transform: translate3d(8px, -8px, 0) rotate(2deg); }
+    90% { transform: translate3d(-8px, -8px, 0) rotate(-2deg); }
 }
 
 body.shake {
@@ -544,15 +554,13 @@ body.shake {
 
 <body>
 
-<!-- FLOATING HEARTS BACKGROUND -->
 <div class="floating-hearts" id="floatingHearts"></div>
 
-<!-- HEADER -->
 <div class="header-text" id="headerTxt">
     <h1>✨ Bir Yeni Mesaj ✨</h1>
     <p>(Kalbe tıklar mısın?..)</p>
 </div>
-    <!-- ENVELOPE -->
+
 <div class="envelope-container" id="envContainer">
     <div class="lid"></div>
     <div class="heart-seal" onclick="openEnvelope()">❤️</div>
@@ -576,20 +584,18 @@ body.shake {
             </p>
             <div class="btn-group">
                 <button class="btn btn-yes" onclick="acceptProposal()">EVET ❤️</button>
-                <button class="btn btn-no" id="runBtn" onclick="runAway(event)">HAYIR</button>
+                <button class="btn btn-no" id="runBtn">HAYIR</button>
             </div>
         </div>
         <div class="envelope-front"></div>
     </div>
 </div>
 
-<!-- FINAL SCREEN -->
 <div id="final-overlay">
     <h1 class="final-msg">Seni Seviyorum ❤️</h1>
     <canvas id="heartCanvas"></canvas>
 </div>
 
-<!-- SPONSOR BRANDING -->
 <div class="sponsor-brand">by lenstedreal</div>
 
 <script>
@@ -597,7 +603,7 @@ body.shake {
 let envelopeOpened = false;
 let audioContext = null;
 
-// ==================== AUDIO ====================
+// ==================== AUDIO ENGINE ====================
 function initAudio() {
     if (!audioContext) {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -605,17 +611,37 @@ function initAudio() {
 }
 
 function playEnvelopeSound() {
-    initAudio(); // boş ama hatayı öldürür
+    initAudio();
+    if (!audioContext) return;
+    
+    // Zarf açılma efekti - yumuşak frekans yükselmesi
+    const osc = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    osc.connect(gain);
+    gain.connect(audioContext.destination);
+
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(150, audioContext.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.4);
+    
+    gain.gain.setValueAtTime(0, audioContext.currentTime);
+    gain.gain.linearRampToValueAtTime(0.15, audioContext.currentTime + 0.05);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+
+    osc.start();
+    osc.stop(audioContext.currentTime + 0.4);
 }
 
 function playAcceptanceSound() {
     initAudio();
+    if (!audioContext) return;
+
     const notes = [
-        { freq: 523.25, time: 0 },
-        { freq: 587.33, time: 0.15 },
-        { freq: 659.25, time: 0.3 },
-        { freq: 783.99, time: 0.5 },
-        { freq: 1046.5, time: 0.75 }
+        { freq: 523.25, time: 0 },    // C5
+        { freq: 587.33, time: 0.12 },   // D5
+        { freq: 659.25, time: 0.24 },   // E5
+        { freq: 783.99, time: 0.36 },   // G5
+        { freq: 1046.50, time: 0.52 }   // C6
     ];
 
     notes.forEach(note => {
@@ -624,32 +650,19 @@ function playAcceptanceSound() {
         osc.connect(gain);
         gain.connect(audioContext.destination);
 
+        osc.type = 'sine';
         osc.frequency.setValueAtTime(note.freq, audioContext.currentTime + note.time);
+        
         gain.gain.setValueAtTime(0, audioContext.currentTime + note.time);
-        gain.gain.linearRampToValueAtTime(0.25, audioContext.currentTime + note.time + 0.02);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + note.time + 0.3);
+        gain.gain.linearRampToValueAtTime(0.2, audioContext.currentTime + note.time + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + note.time + 0.35);
 
         osc.start(audioContext.currentTime + note.time);
-        osc.stop(audioContext.currentTime + note.time + 0.3);
+        osc.stop(audioContext.currentTime + note.time + 0.35);
     });
 }
 
-function playClickSound() {
-    initAudio();
-    const osc = audioContext.createOscillator();
-    const gain = audioContext.createGain();
-    osc.connect(gain);
-    gain.connect(audioContext.destination);
-
-    osc.frequency.setValueAtTime(800, audioContext.currentTime);
-    gain.gain.setValueAtTime(0.2, audioContext.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-
-    osc.start();
-    osc.stop(audioContext.currentTime + 0.1);
-}
-
-// ==================== ENVELOPE ====================
+// ==================== ENVELOPE CONTROLLER ====================
 function openEnvelope() {
     if (envelopeOpened) return;
     envelopeOpened = true;
@@ -659,25 +672,25 @@ function openEnvelope() {
     document.getElementById('headerTxt').classList.add('fade-out');
 }
 
-// ==================== BUTTON ====================
+// ==================== BUTTON EVASION (FIXED LOGIC) ====================
 function runAway(event) {
-    event.preventDefault();
+    if (event) event.preventDefault();
 
     const btnNo = document.getElementById('runBtn');
     const btnYes = document.querySelector('.btn-yes');
 
-    // HAYIR KAYBOLSUN
+    // HAYIR butonunu tamamen kapat
     btnNo.style.opacity = '0';
     btnNo.style.pointerEvents = 'none';
-    btnNo.style.transition = 'opacity 0.2s ease';
+    btnNo.style.transition = 'opacity 0.25s cubic-bezier(0.25, 1, 0.5, 1)';
 
-    // EVET BÜYÜSÜN
+    // EVET butonunu devasa boyuta getir
     btnYes.style.transform = 'scale(1.6)';
-    btnYes.style.transition = 'transform 0.3s ease';
+    btnYes.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
     btnYes.style.zIndex = '10';
 }
 
-// ==================== ACCEPT ====================
+// ==================== ACCEPT ACTIONS ====================
 function acceptProposal() {
     playAcceptanceSound();
     const overlay = document.getElementById('final-overlay');
@@ -689,37 +702,38 @@ function acceptProposal() {
     setTimeout(startHeartAnimation, 300);
 }
 
-// ==================== HEART ====================
+// ==================== HIGH-RES CANVAS ANIMATION ====================
 function startHeartAnimation() {
     const canvas = document.getElementById('heartCanvas');
     const ctx = canvas.getContext('2d');
 
-    const size = Math.min(window.innerWidth * 0.8, 600);
-    canvas.width = size;
-    canvas.height = size;
+    const size = Math.min(window.innerWidth * 0.8, 500);
+    
+    // Retina/HD Ekran Kalibrasyon Çarpanı
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = size * dpr;
+    canvas.height = size * dpr;
+    canvas.style.width = size + 'px';
+    canvas.style.height = size + 'px';
+    
+    ctx.scale(dpr, dpr);
 
     ctx.clearRect(0, 0, size, size);
     ctx.strokeStyle = '#ff4d8d';
-    ctx.lineWidth = 5;
+    ctx.lineWidth = 4;
     ctx.shadowColor = '#ff4d8d';
     ctx.shadowBlur = 15;
 
     let t = 0;
-    const scale = size / 35;
+    const scale = size / 38; // Orantı kalibrasyonu
     const cx = size / 2;
-    const cy = size / 2;
-    const runBtn = document.getElementById('runBtn');
-
-if (window.matchMedia('(hover: hover)').matches) {
-    runBtn.addEventListener('mouseover', runAway);
-} else {
-    runBtn.addEventListener('click', runAway);
-}
+    const cy = size / 2 - 20; // Yukarı doğru hafif ofset
     
     ctx.beginPath();
 
     function draw() {
         if (t > Math.PI * 2) return;
+        // Matematiksel Parametrik Kalp Formülü
         const x = 16 * Math.pow(Math.sin(t), 3);
         const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
         const dx = x * scale + cx;
@@ -729,20 +743,44 @@ if (window.matchMedia('(hover: hover)').matches) {
         else ctx.lineTo(dx, dy);
 
         ctx.stroke();
-        t += 0.04;
+        t += 0.03; // Yumuşak çizim hızı
         requestAnimationFrame(draw);
     }
     draw();
 }
 
-// ==================== INIT ====================
+// ==================== AMBIENT PARTICLES ====================
+function createFloatingHearts() {
+    const container = document.getElementById('floatingHearts');
+    const heartTypes = ['❤️', '💖', '🌸', '✨'];
+    const maxHearts = 25;
+
+    for (let i = 0; i < maxHearts; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'heart-particle';
+        heart.innerText = heartTypes[Math.floor(Math.random() * heartTypes.length)];
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDelay = Math.random() * 6 + 's';
+        heart.style.fontSize = (Math.random() * 15 + 15) + 'px';
+        container.appendChild(heart);
+    }
+}
+
+// ==================== INITIALIZATION CYCLE ====================
 window.addEventListener('load', () => {
     createFloatingHearts();
+    
+    // Ses motoru tetikleyicisi
     document.body.addEventListener('click', initAudio, { once: true });
+    document.body.addEventListener('touchstart', initAudio, { once: true });
 
-    const canvas = document.getElementById('heartCanvas');
-    const overlay = document.getElementById('final-overlay');
-    canvas.addEventListener('click', () => overlay.classList.add('show'));
+    // HAYIR butonunun olay dinleyicileri (Doğru yere taşındı)
+    const runBtn = document.getElementById('runBtn');
+    if (window.matchMedia('(hover: hover)').matches) {
+        runBtn.addEventListener('mouseover', runAway);
+    } else {
+        runBtn.addEventListener('click', runAway);
+    }
 });
 </script>
 
