@@ -59,6 +59,8 @@ body {
     opacity: 0.3;
     animation: float-up 8s infinite linear;
     will-change: transform;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 @keyframes float-up {
@@ -122,7 +124,6 @@ body {
     transform: scale(1.02);
 }
 
-/* Masaüstü kırılımı için kritik kaydırma kuralı geri eklendi */
 .envelope-container.open {
     transform: translate3d(0, 80px, 0);
 }
@@ -182,7 +183,7 @@ body {
     z-index: 20;
 }
 
-/* HEART SEAL */
+/* HEART SEAL (FIXED SELECTION BUG) */
 .heart-seal {
     position: absolute;
     top: 115px;
@@ -194,10 +195,19 @@ body {
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     animation: pulse-heart 2s infinite ease-in-out;
     filter: drop-shadow(0 0 10px rgba(255, 0, 68, 0.6));
+    
+    /* Mobil uzun basma ve metin seçme menüsünü engelleme kuralları */
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-touch-callout: none;
+    pointer-events: auto;
+    -webkit-tap-highlight-color: transparent;
 }
 
 @keyframes pulse-heart {
-    0%, 100’% { transform: translate3d(-50%, 0, 0) scale(1); }
+    0%, 100% { transform: translate3d(-50%, 0, 0) scale(1); }
     50% { transform: translate3d(-50%, 0, 0) scale(1.1); }
 }
 
@@ -311,6 +321,7 @@ body {
     letter-spacing: 0.5px;
     position: relative;
     overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .btn::before {
@@ -519,7 +530,7 @@ body.shake {
 
 <div class="envelope-container" id="envContainer">
     <div class="lid"></div>
-    <div class="heart-seal" onclick="openEnvelope()">❤️</div>
+    <div class="heart-seal" id="mainHeartSeal">❤️</div>
 
     <div class="envelope-wrapper">
         <div class="letter">
@@ -552,7 +563,7 @@ body.shake {
 // ==================== GLOBAL VARIABLES ====================
 let envelopeOpened = false;
 let audioContext = null;
-let noActionCount = 0; // Aşamalı kaçış motoru sayacı aktif
+let noActionCount = 0;
 
 // ==================== AUDIO ENGINE ====================
 function initAudio() {
@@ -590,11 +601,11 @@ function playAcceptanceSound() {
     if (!audioContext) return;
 
     const notes = [
-        { freq: 523.25, time: 0 },    // C5
-        { freq: 587.33, time: 0.12 },   // D5
-        { freq: 659.25, time: 0.24 },   // E5
-        { freq: 783.99, time: 0.36 },   // G5
-        { freq: 1046.50, time: 0.52 }   // C6
+        { freq: 523.25, time: 0 },    
+        { freq: 587.33, time: 0.12 },   
+        { freq: 659.25, time: 0.24 },   
+        { freq: 783.99, time: 0.36 },   
+        { freq: 1046.50, time: 0.52 }   
     ];
 
     notes.forEach(note => {
@@ -626,7 +637,7 @@ function openEnvelope() {
     document.getElementById('headerTxt').classList.add('fade-out');
 }
 
-// ==================== BUTTON EVASION ENGINE (OPTIMIZED) ====================
+// ==================== BUTTON EVASION ENGINE ====================
 function runAway(event) {
     if (event) event.preventDefault();
 
@@ -635,14 +646,11 @@ function runAway(event) {
     const btnYes = document.querySelector('.btn-yes');
 
     if (noActionCount === 1) {
-        // Aşama 1: Evet hafif büyür
         btnYes.style.transform = 'scale(1.18)';
         btnYes.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
     } else if (noActionCount === 2) {
-        // Aşama 2: Evet baskın boyuta geçer
         btnYes.style.transform = 'scale(1.35)';
     } else if (noActionCount >= 3) {
-        // Aşama 3: Hayır tamamen imha edilir, alan çökmesi engellenir
         btnNo.style.opacity = '0';
         btnNo.style.pointerEvents = 'none';
         btnNo.style.width = '0';
@@ -650,7 +658,6 @@ function runAway(event) {
         btnNo.style.margin = '0';
         btnNo.style.transition = 'all 0.3s ease';
         
-        // Evet tüm satırı kilitler
         btnYes.style.transform = 'scale(1.5)';
         btnYes.style.width = '100%';
         btnYes.style.zIndex = '10';
@@ -712,7 +719,7 @@ function startHeartAnimation() {
     draw();
 }
 
-// ==================== AMBIENT PARTICLES (ORGANIC) ====================
+// ==================== AMBIENT PARTICLES ====================
 function createFloatingHearts() {
     const container = document.getElementById('floatingHearts');
     if (!container) return;
@@ -725,7 +732,6 @@ function createFloatingHearts() {
         heart.innerText = heartTypes[Math.floor(Math.random() * heartTypes.length)];
         heart.style.left = Math.random() * 100 + 'vw';
         heart.style.animationDelay = Math.random() * 6 + 's';
-        // Kalplerin tek düze yükselmesini engellemek için hız asenkronizasyonu
         heart.style.animationDuration = (Math.random() * 4 + 6) + 's';
         heart.style.fontSize = (Math.random() * 15 + 15) + 'px';
         container.appendChild(heart);
@@ -736,4 +742,38 @@ function createFloatingHearts() {
 window.addEventListener('load', () => {
     createFloatingHearts();
     
- 
+    // Ses motoru tetikleyicileri
+    document.body.addEventListener('click', initAudio, { once: true });
+    document.body.addEventListener('touchstart', initAudio, { once: true });
+
+    // Kalp mührü için güvenli event listener yapılandırması (Metin seçimini bloklar)
+    const mainHeart = document.getElementById('mainHeartSeal');
+    if (mainHeart) {
+        mainHeart.addEventListener('click', (e) => {
+            e.preventDefault();
+            openEnvelope();
+        });
+        mainHeart.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            openEnvelope();
+        }, { passive: false });
+    }
+
+    // Hayır butonu event listener'ları
+    const runBtn = document.getElementById('runBtn');
+    if (runBtn) {
+        if (window.matchMedia('(hover: hover)').matches) {
+            runBtn.addEventListener('mouseover', runAway);
+        } else {
+            runBtn.addEventListener('click', runAway);
+        }
+        runBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            runAway(e);
+        }, { passive: false });
+    }
+});
+</script>
+
+</body>
+</html>
