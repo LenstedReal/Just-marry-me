@@ -183,7 +183,7 @@ body {
     z-index: 20;
 }
 
-/* HEART SEAL (FIXED SELECTION BUG) */
+/* HEART SEAL */
 .heart-seal {
     position: absolute;
     top: 115px;
@@ -196,7 +196,6 @@ body {
     animation: pulse-heart 2s infinite ease-in-out;
     filter: drop-shadow(0 0 10px rgba(255, 0, 68, 0.6));
     
-    /* Mobil uzun basma ve metin seçme menüsünü engelleme kuralları */
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -216,7 +215,7 @@ body {
     filter: drop-shadow(0 0 20px rgba(255, 0, 68, 0.9));
 }
 
-/* LETTER */
+/* LETTER AREA */
 .letter {
     position: absolute;
     bottom: 15px;
@@ -236,6 +235,7 @@ body {
     border-radius: 5px;
     box-shadow: 0 5px 20px rgba(0,0,0,0.2);
     overflow-y: auto;
+    font-family: 'Poppins', sans-serif !important;
 }
 
 .letter::-webkit-scrollbar {
@@ -253,7 +253,7 @@ body {
 }
 
 .letter-name {
-    font-family: 'Dancing Script', cursive;
+    font-family: 'Dancing Script', cursive !important;
     color: var(--neon-pink);
     font-size: 2rem;
     font-weight: 700;
@@ -262,6 +262,7 @@ body {
 }
 
 .letter p {
+    font-family: 'Poppins', sans-serif !important;
     font-size: 1rem;
     line-height: 1.7;
     color: #333;
@@ -270,6 +271,7 @@ body {
 }
 
 .letter strong {
+    font-family: 'Poppins', sans-serif !important;
     color: var(--neon-pink);
     font-size: 1.15rem;
     font-weight: 600;
@@ -742,11 +744,9 @@ function createFloatingHearts() {
 window.addEventListener('load', () => {
     createFloatingHearts();
     
-    // Ses motoru tetikleyicileri
     document.body.addEventListener('click', initAudio, { once: true });
     document.body.addEventListener('touchstart', initAudio, { once: true });
 
-    // Kalp mührü için güvenli event listener yapılandırması (Metin seçimini bloklar)
     const mainHeart = document.getElementById('mainHeartSeal');
     if (mainHeart) {
         mainHeart.addEventListener('click', (e) => {
@@ -759,7 +759,6 @@ window.addEventListener('load', () => {
         }, { passive: false });
     }
 
-    // Hayır butonu event listener'ları
     const runBtn = document.getElementById('runBtn');
     if (runBtn) {
         if (window.matchMedia('(hover: hover)').matches) {
