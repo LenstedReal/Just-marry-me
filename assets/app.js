@@ -7,7 +7,7 @@
 
   // ---------- personalisation (?isim=...) ----------
   (function () {
-    var name = "cansu'm";
+    var name = "tugce'm";
     try {
       var q = new URLSearchParams(location.search).get('isim');
       if (q) { q = q.replace(/[\u0000-\u001f<>]/g, '').trim().slice(0, 24); if (q) name = q; }
@@ -258,7 +258,10 @@
     }, 2400);
   }
   var accepted = false;
-  function accept() {
+  function accept(e) {
+    // A tap on HAYIR moves it away; the browser then fires that same tap's click on whatever is now under the finger,
+    // which can be the growing EVET. Ignore any EVET click that comes right after a dodge, and synthetic clicks.
+    if (e && (e.isTrusted === false || Date.now() - lastDodge < 800)) return;
     if (accepted) return; accepted = true; initAudio(); playAcceptanceSound();
     var ov = $('final-overlay'); ov.classList.add('show'); ov.setAttribute('aria-hidden', 'false');
     letter.setAttribute('aria-hidden', 'true');
